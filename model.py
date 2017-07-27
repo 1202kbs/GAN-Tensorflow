@@ -13,6 +13,7 @@ class GAN(object):
     def __init__(self, config, sess):
         self.input_dim = config.input_dim
         self.z_dim = config.z_dim
+        self.d_update = config.d_update
         self.batch_size = config.batch_size
         self.nepoch = config.nepoch
         self.lr = config.lr
@@ -123,7 +124,7 @@ class GAN(object):
             batch_xs, _ = self.mnist.train.next_batch(self.batch_size)
             feed_dict = {self.X: batch_xs, self.z: self.z_sampler(self.batch_size, self.z_dim)}
 
-            for _ in range(5):
+            for _ in range(self.d_update):
                 _, D_loss = self.sess.run([self.D_optim, self.D_loss], feed_dict=feed_dict)
             _, G_loss = self.sess.run([self.G_optim, self.G_loss], feed_dict=feed_dict)
             
